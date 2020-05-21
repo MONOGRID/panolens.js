@@ -2237,7 +2237,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
             if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-                // style.display = 'none';
+                style.display = 'none';
                 classList.remove('hover');
                 left.style.display = 'block';
                 right.style.display = 'block';
@@ -2287,7 +2287,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
         if ( element && !this.element.locked ) {
 
-            const { left, right, classList } = element;
+            const { style, left, right, classList } = element;
 
             style.display = 'none';
             classList.remove('hover');

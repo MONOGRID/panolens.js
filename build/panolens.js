@@ -2241,7 +2241,7 @@
 
 	            if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-	                // style.display = 'none';
+	                style.display = 'none';
 	                classList.remove('hover');
 	                left.style.display = 'block';
 	                right.style.display = 'block';
@@ -2291,7 +2291,7 @@
 
 	        if ( element && !this.element.locked ) {
 
-	            const { left, right, classList } = element;
+	            const { style, left, right, classList } = element;
 
 	            style.display = 'none';
 	            classList.remove('hover');
