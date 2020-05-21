@@ -1,6 +1,6 @@
 import { Cache, Texture, RGBFormat, RGBAFormat, CubeTexture, EventDispatcher, VideoTexture, LinearFilter, Vector2, SpriteMaterial, Sprite, Color, CanvasTexture, DoubleSide, Vector3, Mesh, BoxBufferGeometry, UniformsUtils, ShaderMaterial, BackSide, Object3D, BufferGeometry, BufferAttribute, MeshBasicMaterial, ShaderLib, Matrix4, Quaternion, PlaneBufferGeometry, Math as Math$1, MOUSE, PerspectiveCamera, OrthographicCamera, Euler, Scene, StereoCamera, WebGLRenderTarget, NearestFilter, Raycaster, Frustum, WebGLRenderer, REVISION as REVISION$1 } from 'three';
 
-const version="0.11.0";const devDependencies={"@tweenjs/tween.js":"^17.4.0",ava:"^2.1.0","browser-env":"^3.2.6",concurrently:"^4.1.0",coveralls:"^3.0.4",docdash:"^1.1.1",eslint:"^5.16.0","google-closure-compiler":"^20190528.0.0","http-server":"^0.11.1",jsdoc:"^3.6.2",nyc:"^14.1.1",rollup:"^1.15.1","rollup-plugin-commonjs":"^10.0.0","rollup-plugin-inject":"^2.2.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.0.1",three:"^0.105.2",xmlhttprequest:"^1.8.0"};
+const version="0.11.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 /**
  * REVISION
@@ -716,8 +716,6 @@ Object.assign( Stereo.prototype, {
             roffset.set( 0.5, 0.0 );
             break;
 
-        default: break;
-
         }
 
     },
@@ -1051,11 +1049,8 @@ Reticle.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
 } );
 
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
+var version$1 = '18.5.0';
 
-var Tween = createCommonjsModule(function (module, exports) {
 /**
  * Tween.js - Licensed under the MIT license
  * https://github.com/tweenjs/tween.js
@@ -1110,10 +1105,11 @@ _Group.prototype = {
 
 		time = time !== undefined ? time : TWEEN.now();
 
-		// Tweens are updated in "batches". If you add a new tween during an update, then the
-		// new tween will be updated in the next batch.
-		// If you remove a tween during an update, it may or may not be updated. However,
-		// if the removed tween was added during the current batch, then it will not be updated.
+		// Tweens are updated in "batches". If you add a new tween during an
+		// update, then the new tween will be updated in the next batch.
+		// If you remove a tween during an update, it may or may not be updated.
+		// However, if the removed tween was added during the current batch,
+		// then it will not be updated.
 		while (tweenIds.length > 0) {
 			this._tweensAddedDuringUpdate = {};
 
@@ -1178,6 +1174,8 @@ else {
 
 
 TWEEN.Tween = function (object, group) {
+	this._isPaused = false;
+	this._pauseStart = null;
 	this._object = object;
 	this._valuesStart = {};
 	this._valuesEnd = {};
@@ -1213,6 +1211,10 @@ TWEEN.Tween.prototype = {
 		return this._isPlaying;
 	},
 
+	isPaused: function () {
+		return this._isPaused;
+	},
+
 	to: function (properties, duration) {
 
 		this._valuesEnd = Object.create(properties);
@@ -1235,6 +1237,8 @@ TWEEN.Tween.prototype = {
 		this._group.add(this);
 
 		this._isPlaying = true;
+
+		this._isPaused = false;
 
 		this._onStartCallbackFired = false;
 
@@ -1261,8 +1265,10 @@ TWEEN.Tween.prototype = {
 				continue;
 			}
 
-			// Save the starting value.
-			this._valuesStart[property] = this._object[property];
+			// Save the starting value, but only once.
+			if (typeof(this._valuesStart[property]) === 'undefined') {
+				this._valuesStart[property] = this._object[property];
+			}
 
 			if ((this._valuesStart[property] instanceof Array) === false) {
 				this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
@@ -1283,7 +1289,10 @@ TWEEN.Tween.prototype = {
 		}
 
 		this._group.remove(this);
+
 		this._isPlaying = false;
+
+		this._isPaused = false;
 
 		if (this._onStopCallback !== null) {
 			this._onStopCallback(this._object);
@@ -1297,6 +1306,41 @@ TWEEN.Tween.prototype = {
 	end: function () {
 
 		this.update(Infinity);
+		return this;
+
+	},
+
+	pause: function(time) {
+
+		if (this._isPaused || !this._isPlaying) {
+			return this;
+		}
+
+		this._isPaused = true;
+
+		this._pauseStart = time === undefined ? TWEEN.now() : time;
+
+		this._group.remove(this);
+
+		return this;
+
+	},
+
+	resume: function(time) {
+
+		if (!this._isPaused || !this._isPlaying) {
+			return this;
+		}
+
+		this._isPaused = false;
+
+		this._startTime += (time === undefined ? TWEEN.now() : time)
+			- this._pauseStart;
+
+		this._pauseStart = 0;
+
+		this._group.add(this);
+
 		return this;
 
 	},
@@ -1966,19 +2010,7 @@ TWEEN.Interpolation = {
 	}
 
 };
-
-// UMD (Universal Module Definition)
-(function (root) {
-
-	{
-
-		// Node.js
-		module.exports = TWEEN;
-
-	}
-
-})();
-});
+TWEEN.version = version$1;
 
 /**
  * @classdesc Information spot attached to panorama
@@ -2027,8 +2059,8 @@ function Infospot ( scale = 300, imageSrc, animated ) {
     this.material.transparent = true;
     this.material.opacity = 0;
 
-    this.scaleUpAnimation = new Tween.Tween();
-    this.scaleDownAnimation = new Tween.Tween();
+    this.scaleUpAnimation = new TWEEN.Tween();
+    this.scaleDownAnimation = new TWEEN.Tween();
 
 
     const postLoad = function ( texture ) {
@@ -2045,13 +2077,13 @@ function Infospot ( scale = 300, imageSrc, animated ) {
 
         textureScale.copy( this.scale );
 
-        this.scaleUpAnimation = new Tween.Tween( this.scale )
+        this.scaleUpAnimation = new TWEEN.Tween( this.scale )
             .to( { x: textureScale.x * scaleFactor, y: textureScale.y * scaleFactor }, duration )
-            .easing( Tween.Easing.Elastic.Out );
+            .easing( TWEEN.Easing.Elastic.Out );
 
-        this.scaleDownAnimation = new Tween.Tween( this.scale )
+        this.scaleDownAnimation = new TWEEN.Tween( this.scale )
             .to( { x: textureScale.x, y: textureScale.y }, duration )
-            .easing( Tween.Easing.Elastic.Out );
+            .easing( TWEEN.Easing.Elastic.Out );
 
         this.material.map = texture;
         this.material.needsUpdate = true;
@@ -2059,15 +2091,15 @@ function Infospot ( scale = 300, imageSrc, animated ) {
     }.bind( this );
 
     // Add show and hide animations
-    this.showAnimation = new Tween.Tween( this.material )
+    this.showAnimation = new TWEEN.Tween( this.material )
         .to( { opacity: 1 }, duration )
         .onStart( this.enableRaycast.bind( this, true ) )
-        .easing( Tween.Easing.Quartic.Out );
+        .easing( TWEEN.Easing.Quartic.Out );
 
-    this.hideAnimation = new Tween.Tween( this.material )
+    this.hideAnimation = new TWEEN.Tween( this.material )
         .to( { opacity: 0 }, duration )
         .onStart( this.enableRaycast.bind( this, false ) )
-        .easing( Tween.Easing.Quartic.Out );
+        .easing( TWEEN.Easing.Quartic.Out );
 
     // Attach event listeners
     this.addEventListener( 'click', this.onClick );
@@ -2201,11 +2233,12 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 		
         if ( element && event.mouseEvent.clientX >= 0 && event.mouseEvent.clientY >= 0 ) {
 
-            const { left, right, style } = element;
+            const { left, right, style, classList } = element;
 
             if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-                style.display = 'none';
+                // style.display = 'none';
+                classList.remove('hover');
                 left.style.display = 'block';
                 right.style.display = 'block';
 
@@ -2216,6 +2249,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
             } else {
 
                 style.display = 'block';
+                classList.add('hover');
                 if ( left ) { left.style.display = 'none'; }
                 if ( right ) { right.style.display = 'none'; }
 
@@ -2253,9 +2287,10 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
         if ( element && !this.element.locked ) {
 
-            const { left, right, style } = element;
+            const { left, right, classList } = element;
 
             style.display = 'none';
+            classList.remove('hover');
             if ( left ) { left.style.display = 'none'; }
             if ( right ) { right.style.display = 'none'; }
 
@@ -4003,7 +4038,7 @@ function Panorama () {
 
     this.active = false;
 
-    this.infospotAnimation = new Tween.Tween( this ).to( {}, this.animationDuration / 2 );
+    this.infospotAnimation = new TWEEN.Tween( this ).to( {}, this.animationDuration / 2 );
 
     this.addEventListener( 'load', this.fadeIn.bind( this ) );
     this.addEventListener( 'panolens-container', this.setContainer.bind( this ) );
@@ -4444,8 +4479,8 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
     setupTransitions: function () {
 
-        this.fadeInAnimation = new Tween.Tween( this.material )
-            .easing( Tween.Easing.Quartic.Out )
+        this.fadeInAnimation = new TWEEN.Tween( this.material )
+            .easing( TWEEN.Easing.Quartic.Out )
             .onStart( function () {
 
                 this.visible = true;
@@ -4460,8 +4495,8 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
             }.bind( this ) );
 
-        this.fadeOutAnimation = new Tween.Tween( this.material )
-            .easing( Tween.Easing.Quartic.Out )
+        this.fadeOutAnimation = new TWEEN.Tween( this.material )
+            .easing( TWEEN.Easing.Quartic.Out )
             .onComplete( function () {
 
                 this.visible = false;
@@ -4476,8 +4511,8 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
             }.bind( this ) );
 
-        this.enterTransition = new Tween.Tween( this )
-            .easing( Tween.Easing.Quartic.Out )
+        this.enterTransition = new TWEEN.Tween( this )
+            .easing( TWEEN.Easing.Quartic.Out )
             .onComplete( function () {
 
                 /**
@@ -4490,8 +4525,8 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
             }.bind ( this ) )
             .start();
 
-        this.leaveTransition = new Tween.Tween( this )
-            .easing( Tween.Easing.Quartic.Out );
+        this.leaveTransition = new TWEEN.Tween( this )
+            .easing( TWEEN.Easing.Quartic.Out );
 
     },
 
@@ -6083,10 +6118,6 @@ LittlePlanet.prototype = Object.assign( Object.create( ImagePanorama.prototype )
 
             break;
 
-        default:
-
-            break;
-
         }
 
         this.onUpdateCallback();
@@ -6123,10 +6154,6 @@ LittlePlanet.prototype = Object.assign( Object.create( ImagePanorama.prototype )
             const distance = Math.sqrt( dx * dx + dy * dy );
 
             this.addZoomDelta( this.userMouse.pinchDistance - distance );
-
-            break;
-
-        default:
 
             break;
 
@@ -7923,8 +7950,8 @@ function Viewer ( options = {} ) {
     this.autoRotateRequestId = null;
     this.outputDivElement = null;
     this.touchSupported = 'ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch;
-    this.tweenLeftAnimation = new Tween.Tween();
-    this.tweenUpAnimation = new Tween.Tween();
+    this.tweenLeftAnimation = new TWEEN.Tween();
+    this.tweenUpAnimation = new TWEEN.Tween();
     this.outputEnabled = false;
     this.viewIndicatorSize = indicatorSize;
     this.tempEnableReticle = enableReticle;
@@ -8974,7 +9001,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
         }
 
         duration = duration !== undefined ? duration : 1000;
-        easing = easing || Tween.Easing.Exponential.Out;
+        easing = easing || TWEEN.Easing.Exponential.Out;
 
         const { left, up } = this.calculateCameraDirectionDelta( vector );
         const rotateControlLeft = this.rotateControlLeft.bind( this );
@@ -8986,7 +9013,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
         this.tweenLeftAnimation.stop();
         this.tweenUpAnimation.stop();
 
-        this.tweenLeftAnimation = new Tween.Tween( ov )
+        this.tweenLeftAnimation = new TWEEN.Tween( ov )
             .to( { left }, duration )
             .easing( easing )
             .onUpdate(function(ov){
@@ -8995,7 +9022,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
             })
             .start();
 
-        this.tweenUpAnimation = new Tween.Tween( ov )
+        this.tweenUpAnimation = new TWEEN.Tween( ov )
             .to( { up }, duration )
             .easing( easing )
             .onUpdate(function(ov){
@@ -9137,9 +9164,6 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
             case 'overlay':
                 this.outputDivElement.textContent = message;
-                break;
-
-            default:
                 break;
 
             }
@@ -9566,7 +9590,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
      */
     update: function () {
 
-        Tween.update();
+        TWEEN.update();
 
         this.updateCallbacks.forEach( function( callback ){ callback(); } );
 
@@ -9970,6 +9994,6 @@ if ( REVISION$1 != THREE_REVISION ) {
  * @author pchen66
  * @namespace PANOLENS
  */
-window.TWEEN = Tween;
+window.TWEEN = TWEEN;
 
 export { BasicPanorama, CONTROLS, CameraPanorama, CubePanorama, CubeTextureLoader, DataImage, EmptyPanorama, GoogleStreetviewPanorama, ImageLittlePlanet, ImageLoader, ImagePanorama, Infospot, LittlePlanet, MODES, Media, Panorama, REVISION, Reticle, STEREOFORMAT, Stereo, StereoImagePanorama, StereoVideoPanorama, THREE_REVISION, THREE_VERSION, TextureLoader, VERSION, VideoPanorama, Viewer, Widget };

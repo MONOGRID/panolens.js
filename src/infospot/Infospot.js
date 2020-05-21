@@ -226,11 +226,12 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 		
         if ( element && event.mouseEvent.clientX >= 0 && event.mouseEvent.clientY >= 0 ) {
 
-            const { left, right, style } = element;
+            const { left, right, style, classList } = element;
 
             if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-                style.display = 'none';
+                // style.display = 'none';
+                classList.remove('hover');
                 left.style.display = 'block';
                 right.style.display = 'block';
 
@@ -241,6 +242,7 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
             } else {
 
                 style.display = 'block';
+                classList.add('hover');
                 if ( left ) { left.style.display = 'none'; }
                 if ( right ) { right.style.display = 'none'; }
 
@@ -278,9 +280,10 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
         if ( element && !this.element.locked ) {
 
-            const { left, right, style } = element;
+            const { left, right, classList } = element;
 
             style.display = 'none';
+            classList.remove('hover');
             if ( left ) { left.style.display = 'none'; }
             if ( right ) { right.style.display = 'none'; }
 
