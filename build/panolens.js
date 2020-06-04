@@ -2492,14 +2492,20 @@
 	     * Add hovering element by cloning an element
 	     * @param {HTMLDOMElement} el - Element to be cloned and displayed
 	     * @param {number} [delta=40] - Vertical delta to the infospot
+	     * @param {Boolean} [clone=true] - By Default cloning the element
 	     * @memberOf Infospot
 	     * @instance
 	     */
-	    addHoverElement: function ( el, delta = 40 ) {
+	    addHoverElement: function ( el, delta = 40, clone = true ) {
 
 	        if ( !this.element ) { 
 
-	            this.element = el.cloneNode( true );
+	            if (clone) {
+	                this.element = el.cloneNode(true);
+	            } else {
+	                this.element = el;
+	            }
+
 	            this.element.style.display = 'block';
 	            this.element.style.top = 0;
 	            this.element.style.opacity = 0;
