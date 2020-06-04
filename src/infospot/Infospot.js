@@ -371,9 +371,9 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
         container = this.container;
         element = this.element;
         
-        width = element.clientWidth / 2;
-        height = element.clientHeight / 2;
-        delta = element.verticalDelta !== undefined ? element.verticalDelta : 40;
+        width = 0;
+        height = 0;
+        delta = 0;
 
         left = x - width;
         top = y - height - delta;
