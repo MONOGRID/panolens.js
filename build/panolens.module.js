@@ -1,6 +1,6 @@
 import { Cache, Texture, RGBFormat, RGBAFormat, CubeTexture, EventDispatcher, VideoTexture, LinearFilter, Vector2, SpriteMaterial, Sprite, Color, CanvasTexture, DoubleSide, Vector3, Mesh, BoxBufferGeometry, UniformsUtils, ShaderMaterial, BackSide, Object3D, BufferGeometry, BufferAttribute, MeshBasicMaterial, ShaderLib, Matrix4, Quaternion, PlaneBufferGeometry, Math as Math$1, MOUSE, PerspectiveCamera, OrthographicCamera, Euler, Scene, StereoCamera, WebGLRenderTarget, NearestFilter, Raycaster, Frustum, WebGLRenderer, REVISION as REVISION$1 } from 'three';
 
-const version="0.11.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
+const version="0.13.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 /**
  * REVISION
@@ -2237,7 +2237,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
             if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-                style.display = 'none';
+                style.display = 'block';
                 classList.remove('hover');
                 left.style.display = 'block';
                 right.style.display = 'block';
@@ -2289,7 +2289,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
             const { style, left, right, classList } = element;
 
-            style.display = 'none';
+            style.display = 'block';
             classList.remove('hover');
             if ( left ) { left.style.display = 'none'; }
             if ( right ) { right.style.display = 'none'; }
@@ -2490,7 +2490,7 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
         if ( !this.element ) { 
 
             this.element = el.cloneNode( true );
-            this.element.style.display = 'none';
+            this.element.style.display = 'block';
             this.element.style.top = 0;
             this.element.style.position = 'absolute';
             this.element.classList.add( 'panolens-infospot' );
