@@ -230,7 +230,7 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
             if ( this.mode === MODES.CARDBOARD || this.mode === MODES.STEREO ) {
 
-                style.display = 'none';
+                // style.display = 'none';
                 classList.remove('hover');
                 left.style.display = 'block';
                 right.style.display = 'block';
@@ -241,7 +241,7 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
             } else {
 
-                style.display = 'block';
+                // style.display = 'block';
                 classList.add('hover');
                 if ( left ) { left.style.display = 'none'; }
                 if ( right ) { right.style.display = 'none'; }
@@ -282,7 +282,7 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
             const { style, left, right, classList } = element;
 
-            style.display = 'none';
+            // style.display = 'none';
             classList.remove('hover');
             if ( left ) { left.style.display = 'none'; }
             if ( right ) { right.style.display = 'none'; }
@@ -483,7 +483,7 @@ Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
         if ( !this.element ) { 
 
             this.element = el.cloneNode( true );
-            this.element.style.display = 'none';
+            this.element.style.display = 'block';
             this.element.style.top = 0;
             this.element.style.position = 'absolute';
             this.element.classList.add( 'panolens-infospot' );
