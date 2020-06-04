@@ -1,6 +1,6 @@
 import { Cache, Texture, RGBFormat, RGBAFormat, CubeTexture, EventDispatcher, VideoTexture, LinearFilter, Vector2, SpriteMaterial, Sprite, Color, CanvasTexture, DoubleSide, Vector3, Mesh, BoxBufferGeometry, UniformsUtils, ShaderMaterial, BackSide, Object3D, BufferGeometry, BufferAttribute, MeshBasicMaterial, ShaderLib, Matrix4, Quaternion, PlaneBufferGeometry, Math as Math$1, MOUSE, PerspectiveCamera, OrthographicCamera, Euler, Scene, StereoCamera, WebGLRenderTarget, NearestFilter, Raycaster, Frustum, WebGLRenderer, REVISION as REVISION$1 } from 'three';
 
-const version="0.13.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
+const version="0.14.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 /**
  * REVISION
@@ -2193,7 +2193,10 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
             this.unlockHoverElement();
             this.onHoverEnd();
+            
+            const { style } = this.element;
 
+            style.display = 'none';
         }
 
     },
@@ -2287,9 +2290,9 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
         if ( element && !this.element.locked ) {
 
-            const { style, left, right, classList } = element;
+            const { left, right, classList } = element;
 
-            style.display = 'block';
+            // style.display = 'block';
             classList.remove('hover');
             if ( left ) { left.style.display = 'none'; }
             if ( right ) { right.style.display = 'none'; }
@@ -2364,18 +2367,19 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
      */
     translateElement: function ( x, y ) {
 
-        if ( !this.element._width || !this.element._height || !this.getContainer() ) {
+        if (!this.getContainer() ) {
 
             return;
 
         }
-
+        
         let left, top, element, width, height, delta, container;
 
         container = this.container;
         element = this.element;
-        width = element._width / 2;
-        height = element._height / 2;
+        
+        width = element.clientWidth / 2;
+        height = element.clientHeight / 2;
         delta = element.verticalDelta !== undefined ? element.verticalDelta : 40;
 
         left = x - width;
@@ -2419,6 +2423,8 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
             style.webkitTransform = style.msTransform = style.transform = value;
 
         }
+
+        style.display = 'block';
 
     },
 
@@ -2492,10 +2498,19 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
             this.element = el.cloneNode( true );
             this.element.style.display = 'block';
             this.element.style.top = 0;
+            this.element.style.opacity = 0;
             this.element.style.position = 'absolute';
             this.element.classList.add( 'panolens-infospot' );
             this.element.verticalDelta = delta;
+            // Store element width for reference
+            this.element._width = this.element.clientWidth;
+            this.element._height = this.element.clientHeight;
 
+            this.showElementAnimation = new TWEEN.Tween( this.element.style )
+                .to( { opacity: 1 }, 500 )
+                .easing( TWEEN.Easing.Quartic.Out );
+            
+            
         }
 
     },
@@ -2588,12 +2603,15 @@ Infospot.prototype = Object.assign( Object.create( Sprite.prototype ), {
      */
     show: function ( delay = 0 ) {
 
-        const { animated, hideAnimation, showAnimation, material } = this;
+        const { animated, hideAnimation, showAnimation, material, showElementAnimation } = this;
 
         if ( animated ) {
 
             hideAnimation.stop();
             showAnimation.delay( delay ).start();
+            if(showElementAnimation) {
+                showElementAnimation.delay( delay ).start();
+            }
 
         } else {
 
@@ -9598,11 +9616,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
         this.scene.traverse( function( child ){
             if ( child instanceof Infospot 
-				&& child.element 
-				&& ( this.hoverObject === child 
-					|| child.element.style.display !== 'none' 
-					|| (child.element.left && child.element.left.style.display !== 'none')
-					|| (child.element.right && child.element.right.style.display !== 'none') ) ) {
+				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new Vector3() ) );
                     child.translateElement( x, y );

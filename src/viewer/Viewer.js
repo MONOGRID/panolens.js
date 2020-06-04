@@ -1747,11 +1747,7 @@ Viewer.prototype = Object.assign( Object.create( THREE.EventDispatcher.prototype
 
         this.scene.traverse( function( child ){
             if ( child instanceof Infospot 
-				&& child.element 
-				&& ( this.hoverObject === child 
-					|| child.element.style.display !== 'none' 
-					|| (child.element.left && child.element.left.style.display !== 'none')
-					|| (child.element.right && child.element.right.style.display !== 'none') ) ) {
+				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new THREE.Vector3() ) );
                     child.translateElement( x, y );
