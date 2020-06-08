@@ -10,14 +10,17 @@ import TWEEN from '@tweenjs/tween.js';
  * @param {number} [scale=300] - Default scale
  * @param {string} [imageSrc=PANOLENS.DataImage.Info] - Image overlay info
  * @param {boolean} [animated=true] - Enable default hover animation
+ * @param {object} [lookAt=true] - Lookat custom 
  */
-function Infospot ( scale = 300, imageSrc, animated ) {
+function Infospot ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 0} ) {
 	
     const duration = 500, scaleFactor = 1.3;
 
     imageSrc = imageSrc || DataImage.Info;
 
-    THREE.Sprite.call( this );
+    var geometry = new THREE.PlaneGeometry( 1, 1 );
+    var material = new THREE.MeshBasicMaterial( );
+    THREE.Mesh.call( this, geometry, material );
 
     this.type = 'infospot';
 
@@ -37,7 +40,7 @@ function Infospot ( scale = 300, imageSrc, animated ) {
     this.mode = MODES.NORMAL;
 
     this.scale.set( scale, scale, 1 );
-    this.rotation.y = Math.PI;
+    // this.rotation.y = Math.PI;
 
     this.container = null;
 
@@ -80,6 +83,8 @@ function Infospot ( scale = 300, imageSrc, animated ) {
         this.material.map = texture;
         this.material.needsUpdate = true;
 
+        this.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
+
     }.bind( this );
 
     // Add show and hide animations
@@ -107,7 +112,7 @@ function Infospot ( scale = 300, imageSrc, animated ) {
 
 };
 
-Infospot.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
+Infospot.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
     constructor: Infospot,
 
