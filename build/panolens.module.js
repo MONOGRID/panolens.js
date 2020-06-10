@@ -1,6 +1,6 @@
 import { Cache, Texture, RGBFormat, RGBAFormat, CubeTexture, EventDispatcher, VideoTexture, LinearFilter, Vector2, SpriteMaterial, Sprite, Color, CanvasTexture, PlaneGeometry, MeshBasicMaterial, Mesh, DoubleSide, Vector3, BoxBufferGeometry, UniformsUtils, ShaderMaterial, BackSide, Object3D, BufferGeometry, BufferAttribute, ShaderLib, Matrix4, Quaternion, PlaneBufferGeometry, Math as Math$1, MOUSE, PerspectiveCamera, OrthographicCamera, Euler, Scene, StereoCamera, WebGLRenderTarget, NearestFilter, Raycaster, Frustum, WebGLRenderer, REVISION as REVISION$1 } from 'three';
 
-const version="0.20.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
+const version="0.22.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 /**
  * REVISION
@@ -2791,8 +2791,6 @@ function InfospotSprite ( scale = 300, imageSrc, animated ) {
 
         this.material.map = texture;
         this.material.needsUpdate = true;
-
-        this.lookAt(new Vector3(lookAt.x, lookAt.y, lookAt.z));
 
     }.bind( this );
 
@@ -10327,7 +10325,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
         this.control.update();
 
         this.scene.traverse( function( child ){
-            if ( (child instanceof Infospot || intersect instanceof InfospotSprite)
+            if ( (child instanceof Infospot || child instanceof InfospotSprite)
 				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new Vector3() ) );

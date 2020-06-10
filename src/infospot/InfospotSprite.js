@@ -80,8 +80,6 @@ function InfospotSprite ( scale = 300, imageSrc, animated ) {
         this.material.map = texture;
         this.material.needsUpdate = true;
 
-        this.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
-
     }.bind( this );
 
     // Add show and hide animations

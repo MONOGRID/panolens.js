@@ -1747,7 +1747,7 @@ Viewer.prototype = Object.assign( Object.create( THREE.EventDispatcher.prototype
         this.control.update();
 
         this.scene.traverse( function( child ){
-            if ( (child instanceof Infospot || intersect instanceof InfospotSprite)
+            if ( (child instanceof Infospot || child instanceof InfospotSprite)
 				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new THREE.Vector3() ) );
