@@ -12,6 +12,7 @@ export { Media } from './auxiliary/Media';
 export { Stereo } from './auxiliary/Stereo';
 export { Reticle } from './interface/Reticle';
 export { Infospot } from './infospot/Infospot';
+export { InfospotSprite } from './infospot/InfospotSprite';
 export { Widget } from './widget/Widget';
 export { Panorama } from './panorama/Panorama';
 export { ImagePanorama } from './panorama/ImagePanorama';

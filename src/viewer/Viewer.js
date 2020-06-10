@@ -6,6 +6,7 @@ import { StereoEffect } from '../lib/effects/StereoEffect';
 import { Widget } from '../widget/Widget';
 import { Reticle } from '../interface/Reticle';
 import { Infospot } from '../infospot/Infospot';
+import { InfospotSprite } from '../infospot/InfospotSprite';
 import { DataImage } from '../DataImage';
 import { Panorama } from '../panorama/Panorama';
 import { VideoPanorama } from '../panorama/VideoPanorama';
@@ -1598,7 +1599,7 @@ Viewer.prototype = Object.assign( Object.create( THREE.EventDispatcher.prototype
         }
 
         // Infospot handler
-        if ( intersect && intersect instanceof Infospot ) {
+        if ( intersect && (intersect instanceof Infospot || intersect instanceof InfospotSprite) ) {
 
             this.infospot = intersect;
 			
@@ -1746,7 +1747,7 @@ Viewer.prototype = Object.assign( Object.create( THREE.EventDispatcher.prototype
         this.control.update();
 
         this.scene.traverse( function( child ){
-            if ( child instanceof Infospot 
+            if ( (child instanceof Infospot || intersect instanceof InfospotSprite)
 				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new THREE.Vector3() ) );
@@ -1938,7 +1939,7 @@ Viewer.prototype = Object.assign( Object.create( THREE.EventDispatcher.prototype
 
             }
 
-            if ( object instanceof Panorama || object instanceof Infospot ) {
+            if ( object instanceof Panorama || object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 object.dispose();
                 object = null;

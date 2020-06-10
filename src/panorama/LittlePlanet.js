@@ -1,5 +1,6 @@
 import { ImagePanorama } from './ImagePanorama';
 import { Infospot } from '../infospot/Infospot';
+import { InfospotSprite } from '../infospot/InfospotSprite';
 import { CONTROLS } from '../Constants';
 import { StereographicShader } from '../shaders/StereographicShader';
 import * as THREE from 'three';
@@ -56,7 +57,7 @@ LittlePlanet.prototype = Object.assign( Object.create( ImagePanorama.prototype )
 
         }
 
-        if ( object instanceof Infospot ) {
+        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
             object.material.depthTest = false;
 			

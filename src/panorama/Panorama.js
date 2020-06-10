@@ -1,4 +1,5 @@
 import { Infospot } from '../infospot/Infospot';
+import { InfospotSprite } from '../infospot/InfospotSprite';
 import { DataImage } from '../DataImage';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
@@ -121,7 +122,7 @@ Panorama.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
         }
 
         // In case of infospots
-        if ( object instanceof Infospot ) {
+        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
             const { container } = this;
 
@@ -214,7 +215,7 @@ Panorama.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
             this.children.forEach( function ( child ) {
 
-                if ( child instanceof Infospot && child.dispatchEvent ) {
+                if ( (child instanceof Infospot || child instanceof InfospotSprite) && child.dispatchEvent ) {
 
                     /**
                      * Set container event
@@ -352,7 +353,7 @@ Panorama.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
         this.traverse( function ( object ) {
 
-            if ( object instanceof Infospot ) {
+            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 if ( visible ) {
 
@@ -730,7 +731,7 @@ Panorama.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
             }
 
-            if ( object instanceof Infospot ) {
+            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 object.dispose();
 
