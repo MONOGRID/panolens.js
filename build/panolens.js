@@ -2024,7 +2024,7 @@
 	 * @param {boolean} [animated=true] - Enable default hover animation
 	 * @param {object} [lookAt=true] - Lookat custom 
 	 */
-	function Infospot$1 ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 0} ) {
+	function Infospot ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 0} ) {
 		
 	    const duration = 500, scaleFactor = 1.3;
 
@@ -2123,9 +2123,9 @@
 	    TextureLoader.load( imageSrc, postLoad );	
 
 	}
-	Infospot$1.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
+	Infospot.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
-	    constructor: Infospot$1,
+	    constructor: Infospot,
 
 	    /**
 	     * Set infospot container
@@ -2826,7 +2826,7 @@
 	}
 	InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
-	    constructor: Infospot,
+	    constructor: InfospotSprite,
 
 	    /**
 	     * Set infospot container
@@ -4849,7 +4849,7 @@
 	        }
 
 	        // In case of infospots
-	        if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+	        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
 	            const { container } = this;
 
@@ -4942,7 +4942,7 @@
 
 	            this.children.forEach( function ( child ) {
 
-	                if ( (child instanceof Infospot$1 || child instanceof InfospotSprite) && child.dispatchEvent ) {
+	                if ( (child instanceof Infospot || child instanceof InfospotSprite) && child.dispatchEvent ) {
 
 	                    /**
 	                     * Set container event
@@ -5080,7 +5080,7 @@
 
 	        this.traverse( function ( object ) {
 
-	            if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+	            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
 	                if ( visible ) {
 
@@ -5181,7 +5181,7 @@
 	        }
 
 	        // Creates a new infospot
-	        const spot = new Infospot$1( scale, img );
+	        const spot = new Infospot( scale, img );
 	        spot.position.copy( position );
 	        spot.toPanorama = pano;
 	        spot.addEventListener( 'click', function () {
@@ -5458,7 +5458,7 @@
 
 	            }
 
-	            if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+	            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
 	                object.dispose();
 
@@ -6752,7 +6752,7 @@
 
 	        }
 
-	        if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+	        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
 	            object.material.depthTest = false;
 				
@@ -10183,7 +10183,7 @@
 	        }
 
 	        // Infospot handler
-	        if ( intersect && (intersect instanceof Infospot$1 || intersect instanceof InfospotSprite) ) {
+	        if ( intersect && (intersect instanceof Infospot || intersect instanceof InfospotSprite) ) {
 
 	            this.infospot = intersect;
 				
@@ -10331,7 +10331,7 @@
 	        this.control.update();
 
 	        this.scene.traverse( function( child ){
-	            if ( (child instanceof Infospot$1 || intersect instanceof InfospotSprite)
+	            if ( (child instanceof Infospot || intersect instanceof InfospotSprite)
 					&& child.element) {
 	                if ( this.checkSpriteInViewport( child ) ) {
 	                    const { x, y } = this.getScreenVector( child.getWorldPosition( new THREE.Vector3() ) );
@@ -10523,7 +10523,7 @@
 
 	            }
 
-	            if ( object instanceof Panorama || object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+	            if ( object instanceof Panorama || object instanceof Infospot || object instanceof InfospotSprite ) {
 
 	                object.dispose();
 	                object = null;
@@ -10737,7 +10737,7 @@
 	exports.ImageLittlePlanet = ImageLittlePlanet;
 	exports.ImageLoader = ImageLoader;
 	exports.ImagePanorama = ImagePanorama;
-	exports.Infospot = Infospot$1;
+	exports.Infospot = Infospot;
 	exports.InfospotSprite = InfospotSprite;
 	exports.LittlePlanet = LittlePlanet;
 	exports.MODES = MODES;

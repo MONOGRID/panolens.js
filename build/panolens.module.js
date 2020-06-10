@@ -2020,7 +2020,7 @@ TWEEN.version = version$1;
  * @param {boolean} [animated=true] - Enable default hover animation
  * @param {object} [lookAt=true] - Lookat custom 
  */
-function Infospot$1 ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 0} ) {
+function Infospot ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 0} ) {
 	
     const duration = 500, scaleFactor = 1.3;
 
@@ -2119,9 +2119,9 @@ function Infospot$1 ( scale = 300, imageSrc, animated, lookAt = {x: 0, y: 0, z: 
     TextureLoader.load( imageSrc, postLoad );	
 
 }
-Infospot$1.prototype = Object.assign( Object.create( Mesh.prototype ), {
+Infospot.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
-    constructor: Infospot$1,
+    constructor: Infospot,
 
     /**
      * Set infospot container
@@ -2822,7 +2822,7 @@ function InfospotSprite ( scale = 300, imageSrc, animated ) {
 }
 InfospotSprite.prototype = Object.assign( Object.create( Sprite.prototype ), {
 
-    constructor: Infospot,
+    constructor: InfospotSprite,
 
     /**
      * Set infospot container
@@ -4845,7 +4845,7 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
         }
 
         // In case of infospots
-        if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
             const { container } = this;
 
@@ -4938,7 +4938,7 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
             this.children.forEach( function ( child ) {
 
-                if ( (child instanceof Infospot$1 || child instanceof InfospotSprite) && child.dispatchEvent ) {
+                if ( (child instanceof Infospot || child instanceof InfospotSprite) && child.dispatchEvent ) {
 
                     /**
                      * Set container event
@@ -5076,7 +5076,7 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
         this.traverse( function ( object ) {
 
-            if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 if ( visible ) {
 
@@ -5177,7 +5177,7 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
         }
 
         // Creates a new infospot
-        const spot = new Infospot$1( scale, img );
+        const spot = new Infospot( scale, img );
         spot.position.copy( position );
         spot.toPanorama = pano;
         spot.addEventListener( 'click', function () {
@@ -5454,7 +5454,7 @@ Panorama.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
             }
 
-            if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+            if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 object.dispose();
 
@@ -6748,7 +6748,7 @@ LittlePlanet.prototype = Object.assign( Object.create( ImagePanorama.prototype )
 
         }
 
-        if ( object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+        if ( object instanceof Infospot || object instanceof InfospotSprite ) {
 
             object.material.depthTest = false;
 			
@@ -10179,7 +10179,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
         }
 
         // Infospot handler
-        if ( intersect && (intersect instanceof Infospot$1 || intersect instanceof InfospotSprite) ) {
+        if ( intersect && (intersect instanceof Infospot || intersect instanceof InfospotSprite) ) {
 
             this.infospot = intersect;
 			
@@ -10327,7 +10327,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
         this.control.update();
 
         this.scene.traverse( function( child ){
-            if ( (child instanceof Infospot$1 || intersect instanceof InfospotSprite)
+            if ( (child instanceof Infospot || intersect instanceof InfospotSprite)
 				&& child.element) {
                 if ( this.checkSpriteInViewport( child ) ) {
                     const { x, y } = this.getScreenVector( child.getWorldPosition( new Vector3() ) );
@@ -10519,7 +10519,7 @@ Viewer.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
             }
 
-            if ( object instanceof Panorama || object instanceof Infospot$1 || object instanceof InfospotSprite ) {
+            if ( object instanceof Panorama || object instanceof Infospot || object instanceof InfospotSprite ) {
 
                 object.dispose();
                 object = null;
@@ -10722,4 +10722,4 @@ if ( REVISION$1 != THREE_REVISION ) {
  */
 window.TWEEN = TWEEN;
 
-export { BasicPanorama, CONTROLS, CameraPanorama, CubePanorama, CubeTextureLoader, DataImage, EmptyPanorama, GoogleStreetviewPanorama, ImageLittlePlanet, ImageLoader, ImagePanorama, Infospot$1 as Infospot, InfospotSprite, LittlePlanet, MODES, Media, Panorama, REVISION, Reticle, STEREOFORMAT, Stereo, StereoImagePanorama, StereoVideoPanorama, THREE_REVISION, THREE_VERSION, TextureLoader, VERSION, VideoPanorama, Viewer, Widget };
+export { BasicPanorama, CONTROLS, CameraPanorama, CubePanorama, CubeTextureLoader, DataImage, EmptyPanorama, GoogleStreetviewPanorama, ImageLittlePlanet, ImageLoader, ImagePanorama, Infospot, InfospotSprite, LittlePlanet, MODES, Media, Panorama, REVISION, Reticle, STEREOFORMAT, Stereo, StereoImagePanorama, StereoVideoPanorama, THREE_REVISION, THREE_VERSION, TextureLoader, VERSION, VideoPanorama, Viewer, Widget };

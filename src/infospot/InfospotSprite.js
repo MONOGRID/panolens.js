@@ -111,7 +111,7 @@ function InfospotSprite ( scale = 300, imageSrc, animated ) {
 
 InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype ), {
 
-    constructor: Infospot,
+    constructor: InfospotSprite,
 
     /**
      * Set infospot container
