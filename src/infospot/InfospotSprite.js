@@ -132,7 +132,9 @@ InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype 
         }
 	
         // Append element if exists
-        if ( container && this.element ) {
+        if ( this.elementContainer && this.element ) {
+            this.elementContainer.appendChild( this.element );
+        } else if ( container && this.element ) {
 	
             container.appendChild( this.element );
 	
@@ -482,10 +484,11 @@ InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype 
      * @param {HTMLDOMElement} el - Element to be cloned and displayed
      * @param {number} [delta=40] - Vertical delta to the infospot
      * @param {Boolean} [clone=true] - By Default cloning the element
+     * @param {Object} [otherContainer=null] - if want to add element in otherContainer
      * @memberOf Infospot
      * @instance
      */
-    addHoverElement: function ( el, delta = 40, clone = true ) {
+    addHoverElement: function ( el, delta = 40, clone = true, otherContainer = null ) {
 
         if ( !this.element ) { 
 
@@ -493,6 +496,10 @@ InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype 
                 this.element = el.cloneNode(true);
             } else {
                 this.element = el;
+            }
+            
+            if (otherContainer) {
+                this.elementContainer = otherContainer;
             }
 
             this.element.style.display = 'block';

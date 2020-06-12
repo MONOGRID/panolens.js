@@ -1,6 +1,6 @@
 import { Cache, Texture, RGBFormat, RGBAFormat, CubeTexture, EventDispatcher, VideoTexture, LinearFilter, Vector2, SpriteMaterial, Sprite, Color, CanvasTexture, PlaneGeometry, MeshBasicMaterial, Mesh, DoubleSide, Vector3, BoxBufferGeometry, UniformsUtils, ShaderMaterial, BackSide, Object3D, BufferGeometry, BufferAttribute, ShaderLib, Matrix4, Quaternion, PlaneBufferGeometry, Math as Math$1, MOUSE, PerspectiveCamera, OrthographicCamera, Euler, Scene, StereoCamera, WebGLRenderTarget, NearestFilter, Raycaster, Frustum, WebGLRenderer, REVISION as REVISION$1 } from 'three';
 
-const version="0.22.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
+const version="0.23.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 /**
  * REVISION
@@ -2144,7 +2144,9 @@ Infospot.prototype = Object.assign( Object.create( Mesh.prototype ), {
         }
 	
         // Append element if exists
-        if ( container && this.element ) {
+        if ( this.elementContainer && this.element ) {
+            this.elementContainer.appendChild( this.element );
+        } else if ( container && this.element ) {
 	
             container.appendChild( this.element );
 	
@@ -2494,10 +2496,11 @@ Infospot.prototype = Object.assign( Object.create( Mesh.prototype ), {
      * @param {HTMLDOMElement} el - Element to be cloned and displayed
      * @param {number} [delta=40] - Vertical delta to the infospot
      * @param {Boolean} [clone=true] - By Default cloning the element
+     * @param {Object} [otherContainer=null] - if want to add element in otherContainer
      * @memberOf Infospot
      * @instance
      */
-    addHoverElement: function ( el, delta = 40, clone = true ) {
+    addHoverElement: function ( el, delta = 40, clone = true, otherContainer = null ) {
 
         if ( !this.element ) { 
 
@@ -2505,6 +2508,10 @@ Infospot.prototype = Object.assign( Object.create( Mesh.prototype ), {
                 this.element = el.cloneNode(true);
             } else {
                 this.element = el;
+            }
+            
+            if (otherContainer) {
+                this.elementContainer = otherContainer;
             }
 
             this.element.style.display = 'block';
@@ -2843,7 +2850,9 @@ InfospotSprite.prototype = Object.assign( Object.create( Sprite.prototype ), {
         }
 	
         // Append element if exists
-        if ( container && this.element ) {
+        if ( this.elementContainer && this.element ) {
+            this.elementContainer.appendChild( this.element );
+        } else if ( container && this.element ) {
 	
             container.appendChild( this.element );
 	
@@ -3193,10 +3202,11 @@ InfospotSprite.prototype = Object.assign( Object.create( Sprite.prototype ), {
      * @param {HTMLDOMElement} el - Element to be cloned and displayed
      * @param {number} [delta=40] - Vertical delta to the infospot
      * @param {Boolean} [clone=true] - By Default cloning the element
+     * @param {Object} [otherContainer=null] - if want to add element in otherContainer
      * @memberOf Infospot
      * @instance
      */
-    addHoverElement: function ( el, delta = 40, clone = true ) {
+    addHoverElement: function ( el, delta = 40, clone = true, otherContainer = null ) {
 
         if ( !this.element ) { 
 
@@ -3204,6 +3214,10 @@ InfospotSprite.prototype = Object.assign( Object.create( Sprite.prototype ), {
                 this.element = el.cloneNode(true);
             } else {
                 this.element = el;
+            }
+            
+            if (otherContainer) {
+                this.elementContainer = otherContainer;
             }
 
             this.element.style.display = 'block';
