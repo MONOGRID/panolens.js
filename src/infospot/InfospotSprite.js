@@ -544,8 +544,11 @@ InfospotSprite.prototype = Object.assign( Object.create( THREE.Sprite.prototype 
 
             }
 
-            this.container.removeChild( this.element );
-            this.element = null;
+            if ( this.elementContainer && this.element.parentNode == this.elementContainer) {
+                this.elementContainer.removeChild( this.element );
+            } else if (this.element.parentNode == this.container){
+                this.container.removeChild( this.element );
+            }
 
         }
 

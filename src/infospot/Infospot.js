@@ -548,8 +548,12 @@ Infospot.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
                 this.element.right = null;
 
             }
-
-            this.container.removeChild( this.element );
+            
+            if ( this.elementContainer && this.element.parentNode == this.elementContainer) {
+                this.elementContainer.removeChild( this.element );
+            } else if (this.element.parentNode == this.container){
+                this.container.removeChild( this.element );
+            }
             this.element = null;
 
         }
