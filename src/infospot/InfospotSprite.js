@@ -71,11 +71,11 @@ function InfospotSprite ( scale = 300, imageSrc, animated ) {
 
         this.scaleUpAnimation = new TWEEN.Tween( this.scale )
             .to( { x: textureScale.x * scaleFactor, y: textureScale.y * scaleFactor }, duration )
-            .easing( TWEEN.Easing.Elastic.Out );
+            .easing( TWEEN.Easing.Quartic.Out );
 
         this.scaleDownAnimation = new TWEEN.Tween( this.scale )
             .to( { x: textureScale.x, y: textureScale.y }, duration )
-            .easing( TWEEN.Easing.Elastic.Out );
+            .easing( TWEEN.Easing.Quartic.Out );
 
         this.material.map = texture;
         this.material.needsUpdate = true;
