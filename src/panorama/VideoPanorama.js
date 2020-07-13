@@ -93,7 +93,7 @@ VideoPanorama.prototype = Object.assign( Object.create( Panorama.prototype ), {
                  * @property {boolean} data - Pause video or not
                  */
                 this.dispatchEvent( { type: 'panolens-viewer-handler', method: 'updateVideoPlayButton', data: false } );
-
+                video.play();
             }
 
             // For mobile silent autoplay
@@ -110,7 +110,7 @@ VideoPanorama.prototype = Object.assign( Object.create( Panorama.prototype ), {
                      * @property {boolean} data - Pause video or not
                      */
                     this.dispatchEvent( { type: 'panolens-viewer-handler', method: 'updateVideoPlayButton', data: false } );
-
+                    video.play();
                 } else {
 
                     /**
