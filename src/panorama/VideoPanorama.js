@@ -144,7 +144,7 @@ VideoPanorama.prototype = Object.assign( Object.create( Panorama.prototype ), {
          * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available
          * 4 = HAVE_ENOUGH_DATA - enough data available to start playing
          */
-        if ( video.readyState > 2 ) {
+        if ( video.readyState > 3 ) {
 
             onloadeddata.call( this );
 
