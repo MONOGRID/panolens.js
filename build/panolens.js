@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.PANOLENS = {}, global.THREE));
 }(this, (function (exports, THREE) { 'use strict';
 
-	const version="0.29.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
+	const version="0.30.0";const devDependencies={"@rollup/plugin-commonjs":"^11.0.2","@rollup/plugin-inject":"^4.0.1","@rollup/plugin-json":"^4.0.2","@rollup/plugin-node-resolve":"^7.1.1","@tweenjs/tween.js":"^18.5.0",ava:"^3.5.0","browser-env":"^3.3.0",concurrently:"^5.1.0",coveralls:"^3.0.11",docdash:"^1.2.0",eslint:"^6.8.0",esm:"^3.2.25","google-closure-compiler":"^20200315.0.0","http-server":"^0.12.1",jsdoc:"^3.6.3","local-web-server":"^3.0.7",nyc:"^14.1.1",rollup:"^2.3.2",three:"^0.115.0",xmlhttprequest:"^1.8.0"};
 
 	/**
 	 * REVISION
@@ -5614,7 +5614,7 @@
 	    createGeometry: function() {
 
 	        const geometry = new THREE.BufferGeometry();
-	        geometry.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array(), 1 ) );
+	        geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(), 1 ) );
 	        return geometry;
 
 	    },
@@ -5639,13 +5639,16 @@
 	} );
 
 	/**
-	 * @classdesc Cubemap-based panorama
+	 * @classdesc Cubemap-based panorama 
 	 * @constructor
 	 * @param {array} images - Array of 6 urls to images, one for each side of the CubeTexture. The urls should be specified in the following order: pos-x, neg-x, pos-y, neg-y, pos-z, neg-z
 	 */
 	function CubePanorama ( images = [] ){
 
 	    Panorama.call( this );
+
+	    this.geometry.deleteAttribute( 'normal' );
+	    this.geometry.deleteAttribute( 'uv' );
 
 	    this.images = images;
 	    this.type = 'cube_panorama';
@@ -5667,6 +5670,7 @@
 	        const uniforms = THREE.UniformsUtils.clone( _uniforms );
 	        
 	        uniforms.opacity.value = 0;
+	        uniforms.envMap.value = new THREE.CubeTexture();
 
 	        const material = new THREE.ShaderMaterial( {
 
@@ -5674,9 +5678,19 @@
 	            vertexShader,
 	            uniforms,
 	            side: THREE.BackSide,
-	            transparent: true,
-	            opacity: 0
+	            opacity: 0,
+	            transparent: true
 
+	        } );
+
+	        Object.defineProperty( material, 'envMap', {
+
+	            get: function () {
+
+	                return this.uniforms.envMap.value;
+	        
+	            }
+	        
 	        } );
 
 	        return material;
@@ -5709,8 +5723,8 @@
 	     * @instance
 	     */
 	    onLoad: function ( texture ) {
-			
-	        this.material.uniforms[ 'tCube' ].value = texture;
+
+	        this.material.uniforms.envMap.value = texture;
 
 	        Panorama.prototype.onLoad.call( this );
 
@@ -5718,7 +5732,7 @@
 
 	    getTexture: function () {
 
-	        return this.material.uniforms.tCube.value;
+	        return this.material.uniforms.envMap.value;
 
 	    },
 
@@ -5729,7 +5743,7 @@
 	     */
 	    dispose: function () {	
 
-	        const { value } = this.material.uniforms.tCube;
+	        const { value } = this.material.uniforms.envMap;
 
 	        this.images.forEach( ( image ) => { THREE.Cache.remove( image ); } );
 
@@ -8455,7 +8469,7 @@
 
 	    const distortion = new THREE.Vector2( 0.441, 0.156 );
 
-	    const geometry = new THREE.PlaneBufferGeometry( 1, 1, 10, 20 ).removeAttribute( 'normal' ).toNonIndexed();
+	    const geometry = new THREE.PlaneBufferGeometry( 1, 1, 10, 20 ).deleteAttribute( 'normal' ).toNonIndexed();
 
 	    const positions = geometry.attributes.position.array;
 	    const uvs = geometry.attributes.uv.array;
